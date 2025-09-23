@@ -1,0 +1,62 @@
+//
+//  Models.swift
+//  Pokemon Explorer Task
+//
+//  Created by George on 23/09/25.
+//
+import Foundation
+
+struct PokemonListResponse: Decodable{
+    let count: Int
+    let next: String?
+    let previous: String?
+    let result: [PokemonModel]
+}
+
+struct PokemonModel: Identifiable, Decodable{
+    let name: String
+    let url: String
+    
+    var id: String { name }
+}
+
+struct PokemonDataModel: Decodable {
+    let id: Int
+    let name: String
+    let height: Int
+    let weight: Int
+    let sprites: Sprites
+    let types: [TypeEntry]
+    
+    struct Sprites: Decodable {
+        let front_default: String?
+        let other: OtherSprites?
+        
+        
+        struct OtherSprites: Decodable{
+            let officialArtwork: OfficialArtwork?
+            
+            
+            private enum CodingKeys: String, CodingKey {
+                case officialArtwork = "official-artwork"
+            }
+            struct OfficialArtwork: Decodable{
+                let front_default: String?
+                
+            }
+        }
+    }
+    
+    struct TypeEntry: Decodable{
+        let slot: Int
+        let typeName: TypeName
+        
+        struct TypeName: Decodable {
+            let name: String
+        }
+    }
+    
+    var imageURLString: String? {
+        sprites.other?.officialArtwork?.front_default ?? sprites.front_default
+    }
+}
