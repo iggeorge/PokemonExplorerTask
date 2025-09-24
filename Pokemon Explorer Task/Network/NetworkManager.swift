@@ -9,6 +9,7 @@ import Foundation
 
 class NetworkManager {
     static let shared = NetworkManager()
+
     private init() {}
 
     private let baseURL = "https://pokeapi.co/api/v2/pokemon"

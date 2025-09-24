@@ -10,6 +10,8 @@ import SwiftUI
 class PokemonDetailViewModel: ObservableObject {
     var pokemonInfo: PokemonModel
     @Published var DisplayModel: PokemonDataModel?
+    @Published var errorMessage: String?
+
     init(info: PokemonModel) {
         pokemonInfo = info
     }
@@ -17,11 +19,16 @@ class PokemonDetailViewModel: ObservableObject {
     func getPokemonDetails() async {
         do {
             let response = try await NetworkManager.shared.fetchPokemonDetails(name: pokemonInfo.name)
-            DispatchQueue.main.async { [weak self] in
+            print("details success")
+            await MainActor.run { [weak self] in
+                self?.errorMessage = nil
                 self?.DisplayModel = response
             }
         } catch {
-            print("detais error:", error)
+            print("Error fetching Pokémon details: \(error)")
+            await MainActor.run { [weak self] in
+                self?.errorMessage = "Oops! Something went wrong"
+            }
         }
     }
 }

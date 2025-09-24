@@ -10,18 +10,21 @@ class PokemonListViewModel: ObservableObject {
     @Published var pokemonList: [PokemonModel] = []
     @Published var errorMessage: String?
     @Published var selectedPokemon: PokemonModel?
+
     func fetchPokemon() async {
         do {
-            let response = try await NetworkManager.shared.fetchPokemonList(limit: 20)
-            print("Response from server: \(response)")
-            DispatchQueue.main.async { [weak self] in
+            let response = try await NetworkManager.shared.fetchPokemonList()
+            // print("Response from server: \(response)")
+            print("list success")
+            await MainActor.run { [weak self] in
+                self?.errorMessage = nil
                 self?.pokemonList = response.results
             }
         } catch {
-            DispatchQueue.main.async { [weak self] in
-                self?.errorMessage = error.localizedDescription
-            }
             print("Error fetching Pokémon: \(error)")
+            await MainActor.run { [weak self] in
+                self?.errorMessage = "Oops! Something went wrong"
+            }
         }
     }
 }

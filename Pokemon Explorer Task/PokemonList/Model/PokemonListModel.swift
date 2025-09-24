@@ -1,5 +1,5 @@
 //
-//  Models.swift
+//  PokemonListModel.swift
 //  Pokemon Explorer Task
 //
 //  Created by George on 23/09/25.

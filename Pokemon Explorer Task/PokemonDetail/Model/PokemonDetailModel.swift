@@ -14,7 +14,7 @@ struct PokemonDataModel: Decodable {
     let weight: Int
     let sprites: Sprites
     let types: [TypeEntry]
-    
+
     struct Sprites: Decodable {
         let front_default: String?
         let other: OtherSprites?
@@ -32,14 +32,14 @@ struct PokemonDataModel: Decodable {
             }
         }
     }
-    
+
     struct TypeEntry: Decodable {
         let type: TypeName
         struct TypeName: Decodable {
             let name: String
         }
     }
-    
+
     var imageURLString: String? {
         sprites.other?.officialArtwork?.front_default ?? sprites.front_default
     }

@@ -9,14 +9,18 @@ import SwiftUI
 
 struct PokemonListView: View {
     @StateObject var viewModel = PokemonListViewModel()
-    
+    @State var isRefreshing: Bool = false
     var body: some View {
         NavigationView {
             VStack {
                 if let errorMessage = viewModel.errorMessage {
                     Text("Error: \(errorMessage)")
+                        .multilineTextAlignment(.center)
                         .foregroundColor(.red)
                         .padding()
+                    Button("Retry") {
+                        getPokemonList()
+                    }
                 } else if viewModel.pokemonList.isEmpty {
                     ProgressView("Loading Pokemon")
                 } else {
@@ -25,14 +29,23 @@ struct PokemonListView: View {
                             PokemonDetailView(info: pokemon)
                         }
                     }
+                    .refreshableCompat(isRefreshing: $isRefreshing) {
+                        isRefreshing = true
+                        getPokemonList()
+                    }
                 }
             }
             .onAppear {
-                Task{
-                    await viewModel.fetchPokemon()
-                }
+                getPokemonList()
             }
             .navigationTitle("Pokemon List")
+        }
+    }
+    
+    private func getPokemonList() {
+        Task{
+            await viewModel.fetchPokemon()
+            isRefreshing = false
         }
     }
 }

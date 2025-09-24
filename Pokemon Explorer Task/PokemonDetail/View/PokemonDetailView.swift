@@ -9,14 +9,22 @@ import SwiftUI
 
 
 struct PokemonDetailView: View {
-    @StateObject private var viewmodel: PokemonDetailViewModel
+    @StateObject private var viewModel: PokemonDetailViewModel
 
     init(info: PokemonModel) {
-        _viewmodel = StateObject(wrappedValue: PokemonDetailViewModel(info: info))
+        _viewModel = StateObject(wrappedValue: PokemonDetailViewModel(info: info))
     }
     var body: some View {
         VStack(spacing: 10) {
-            if let displayModel = viewmodel.DisplayModel {
+            if let errorMessage = viewModel.errorMessage {
+                Text("Error: \(errorMessage)")
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.red)
+                    .padding()
+                Button("Retry") {
+                    getDetails()
+                }
+            } else if let displayModel = viewModel.DisplayModel {
                 PokemonImageView(urlString: displayModel.imageURLString ?? "")
                     .frame(width: 300, height: 300)
                     .clipShape(Circle())
@@ -45,19 +53,21 @@ struct PokemonDetailView: View {
                             .background(Color.blue.opacity(0.3))
                             .cornerRadius(16)
                             .frame(alignment: .center)
-                        
                     }
                 }
                 .padding(.horizontal, 50)
-
             } else {
-                ProgressView()
+                ProgressView("Loading Pokemon Details")
             }
         }
         .onAppear {
-            Task {
-                await viewmodel.getPokemonDetails()
-            }
+            getDetails()
+        }
+    }
+
+    private func getDetails() {
+        Task {
+            await viewModel.getPokemonDetails()
         }
     }
 }
