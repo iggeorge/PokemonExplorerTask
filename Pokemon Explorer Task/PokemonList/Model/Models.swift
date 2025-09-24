@@ -6,14 +6,14 @@
 //
 import Foundation
 
-struct PokemonListResponse: Decodable{
+struct PokemonListResponse: Decodable {
     let count: Int
     let next: String?
     let previous: String?
-    let result: [PokemonModel]
+    let results: [PokemonModel]
 }
 
-struct PokemonModel: Identifiable, Decodable{
+struct PokemonModel: Identifiable, Decodable {
     let name: String
     let url: String
     
@@ -32,14 +32,21 @@ struct PokemonDataModel: Decodable {
         let front_default: String?
         let other: OtherSprites?
         
-        
-        struct OtherSprites: Decodable{
+        struct OtherSprites: Decodable {
             let officialArtwork: OfficialArtwork?
-            
-            
-            private enum CodingKeys: String, CodingKey {
+
+            enum CodingKeys: String, CodingKey {
                 case officialArtwork = "official-artwork"
             }
+        
+
+//        struct OtherSprites: Decodable{
+//            let officialArtwork: OfficialArtwork?
+//            
+//            
+//            private enum CodingKeys: String, CodingKey {
+//                case officialArtwork = "official-artwork"
+//            }
             struct OfficialArtwork: Decodable{
                 let front_default: String?
                 
@@ -49,10 +56,11 @@ struct PokemonDataModel: Decodable {
     
     struct TypeEntry: Decodable{
         let slot: Int
-        let typeName: TypeName
+        let type: TypeName
         
         struct TypeName: Decodable {
             let name: String
+            let url: String
         }
     }
     

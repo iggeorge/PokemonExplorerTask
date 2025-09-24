@@ -10,7 +10,7 @@ import SwiftUI
 struct PokemonExplorerTask: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            PokemonListView()
         }
     }
 }
