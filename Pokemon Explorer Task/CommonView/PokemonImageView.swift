@@ -12,15 +12,13 @@ struct PokemonImageView: View {
     let urlString: String
 
     @State private var isLoaded = false
-    
+
     var body: some View {
         ZStack {
-            // Placeholder
             if !isLoaded {
                 ProgressView()
-                    .frame(width: 100, height: 100)
             }
-            
+
             if let url = URL(string: urlString) {
                 WebImage(url: url)
                     .onSuccess { _, _, _ in
@@ -30,13 +28,12 @@ struct PokemonImageView: View {
                     }
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 100, height: 100)
                     .opacity(isLoaded ? 1 : 0) // Fade in manually
             } else {
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 100, height: 100)
+                    .aspectRatio(contentMode: .fit)
                     .foregroundColor(.gray)
             }
         }

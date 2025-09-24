@@ -13,58 +13,9 @@ struct PokemonListResponse: Decodable {
     let results: [PokemonModel]
 }
 
-struct PokemonModel: Identifiable, Decodable {
+struct PokemonModel: Identifiable, Decodable, Hashable {
     let name: String
     let url: String
     
     var id: String { name }
-}
-
-struct PokemonDataModel: Decodable {
-    let id: Int
-    let name: String
-    let height: Int
-    let weight: Int
-    let sprites: Sprites
-    let types: [TypeEntry]
-    
-    struct Sprites: Decodable {
-        let front_default: String?
-        let other: OtherSprites?
-        
-        struct OtherSprites: Decodable {
-            let officialArtwork: OfficialArtwork?
-
-            enum CodingKeys: String, CodingKey {
-                case officialArtwork = "official-artwork"
-            }
-        
-
-//        struct OtherSprites: Decodable{
-//            let officialArtwork: OfficialArtwork?
-//            
-//            
-//            private enum CodingKeys: String, CodingKey {
-//                case officialArtwork = "official-artwork"
-//            }
-            struct OfficialArtwork: Decodable{
-                let front_default: String?
-                
-            }
-        }
-    }
-    
-    struct TypeEntry: Decodable{
-        let slot: Int
-        let type: TypeName
-        
-        struct TypeName: Decodable {
-            let name: String
-            let url: String
-        }
-    }
-    
-    var imageURLString: String? {
-        sprites.other?.officialArtwork?.front_default ?? sprites.front_default
-    }
 }
